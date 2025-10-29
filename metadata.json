@@ -1,0 +1,8 @@
+{
+  "name": "Grabadora de Audio del PC",
+  "description": "Una herramienta sencilla para grabar el sonido que se está reproduciendo en tu PC. Presiona 'Grabar' para empezar, y una vez detenido, podrás previsualizar y descargar el audio.",
+  "requestFramePermissions": [
+    "microphone",
+    "display-capture"
+  ]
+}
