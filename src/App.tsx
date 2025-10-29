@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { MicrophoneIcon, StopIcon, DownloadIcon, AlertIcon } from './components/Icons';
-import lamejs from 'lamejs';
+import * as lamejs from 'lamejs';
 
 type Status = 'idle' | 'recording' | 'stopped' | 'error';
 type AudioFormat = 'webm' | 'wav' | 'mp3';
