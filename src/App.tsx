@@ -221,115 +221,142 @@ const App: React.FC = () => {
   }, [audioURL, format]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 font-sans p-4">
-      <div className="w-full max-w-md mx-auto bg-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 transform transition-all duration-300">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-cyan-400">Grabadora de Audio del PC</h1>
-          <p className="text-gray-400 mt-2">Graba el sonido de cualquier pestaña o de todo tu sistema.</p>
-        </div>
-
-        <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700 text-sm text-gray-300 flex items-start space-x-3">
-          <div className="flex-shrink-0 pt-1">
-            <AlertIcon className="w-5 h-5 text-yellow-400" />
+    <div className="flex flex-col min-h-screen bg-gray-900 font-sans">
+      {/* Contenido Principal */}
+      <main className="flex-grow flex items-center justify-center p-4">
+        <div className="w-full max-w-md mx-auto bg-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 transform transition-all duration-300">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-cyan-400">Grabadora de Audio del PC</h1>
+            <p className="text-gray-400 mt-2">Graba el sonido de cualquier pestaña o de todo tu sistema.</p>
           </div>
-          <p>
-            Al hacer clic en 'Grabar', tu navegador te pedirá que compartas tu pantalla. 
-            <span className="font-semibold text-yellow-300"> Es crucial que marques la opción "Compartir audio de la pestaña" o "Compartir audio del sistema"</span> para que la grabación funcione.
-          </p>
-        </div>
-        
-        <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
-            <h3 className="text-md font-semibold text-gray-200 mb-3 text-center">Formato de Audio</h3>
-            <fieldset className="grid grid-cols-3 gap-2" disabled={status === 'recording'}>
-                <legend className="sr-only">Elige un formato de audio</legend>
-                <div>
-                    <input type="radio" id="format-webm" name="format" value="webm" checked={format === 'webm'} onChange={() => setFormat('webm')} className="peer hidden" />
-                    <label htmlFor="format-webm" className="block cursor-pointer rounded-md border border-gray-600 py-2 px-3 text-center text-sm transition-colors duration-200 peer-checked:bg-cyan-500 peer-checked:border-cyan-500 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed hover:border-gray-500 peer-checked:hover:bg-cyan-600">
-                        WebM <span className="block text-xs text-gray-400">Reducido</span>
-                    </label>
-                </div>
-                <div>
-                    <input type="radio" id="format-wav" name="format" value="wav" checked={format === 'wav'} onChange={() => setFormat('wav')} className="peer hidden" />
-                    <label htmlFor="format-wav" className="block cursor-pointer rounded-md border border-gray-600 py-2 px-3 text-center text-sm transition-colors duration-200 peer-checked:bg-cyan-500 peer-checked:border-cyan-500 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed hover:border-gray-500 peer-checked:hover:bg-cyan-600">
-                        WAV <span className="block text-xs text-gray-400">Calidad Alta</span>
-                    </label>
-                </div>
-                <div>
-                    <input type="radio" id="format-mp3" name="format" value="mp3" checked={format === 'mp3'} onChange={() => setFormat('mp3')} className="peer hidden" disabled={!isWavSupported}/>
-                    <label htmlFor="format-mp3" title={!isWavSupported ? "Tu navegador no soporta la grabación en WAV, necesaria para crear MP3." : ""} className="block cursor-pointer rounded-md border border-gray-600 py-2 px-3 text-center text-sm transition-colors duration-200 peer-checked:bg-cyan-500 peer-checked:border-cyan-500 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed hover:border-gray-500 peer-checked:hover:bg-cyan-600">
-                        MP3 <span className="block text-xs text-gray-400">Compatible</span>
-                    </label>
-                </div>
-            </fieldset>
-        </div>
 
-        <div className="flex flex-col justify-center items-center h-40">
-           {status === 'recording' && (
-            <canvas ref={canvasRef} className="w-full h-20 mb-4 rounded-md" style={{ animation: 'fadeIn 0.5s ease-in-out' }} />
-          )}
-          <button
-            onClick={status === 'recording' ? handleStopRecording : handleStartRecording}
-            className={`
-              flex items-center justify-center text-white
-              transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4
-              ${status === 'recording' ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500/50 w-24 h-24' : 'bg-cyan-500 hover:bg-cyan-600 focus:ring-cyan-500/50 w-32 h-32'}
-              rounded-full shadow-lg
-            `}
-            aria-label={status === 'recording' ? 'Detener grabación' : 'Iniciar grabación'}
-          >
-            {status === 'recording' ? <StopIcon className="w-10 h-10" /> : <MicrophoneIcon className="w-12 h-12" />}
-          </button>
-        </div>
-
-        {error && (
-          <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-md text-center">
-            {error}
-          </div>
-        )}
-        
-        {isProcessing && (
-            <div className="flex flex-col items-center justify-center text-center bg-gray-900/50 p-4 rounded-lg border border-gray-700">
-               <svg className="animate-spin h-8 w-8 text-cyan-400 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-               </svg>
-               <p className="text-lg font-semibold text-cyan-400">Procesando MP3...</p>
-               <p className="text-sm text-gray-400">Esto puede tardar unos segundos.</p>
+          <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700 text-sm text-gray-300 flex items-start space-x-3">
+            <div className="flex-shrink-0 pt-1">
+              <AlertIcon className="w-5 h-5 text-yellow-400" />
             </div>
-        )}
-
-        <div className="space-y-4">
-          <div className="h-16">
-            {audioURL && status === 'stopped' && !isProcessing && (
-              <div className="flex flex-col items-center space-y-4" style={{ animation: 'fadeIn 0.5s ease-in-out' }}>
-                <audio controls src={audioURL} className="w-full rounded-md">
-                  Tu navegador no soporta el elemento de audio.
-                </audio>
-              </div>
-            )}
+            <p>
+              Al hacer clic en 'Grabar', tu navegador te pedirá que compartas tu pantalla. 
+              <span className="font-semibold text-yellow-300"> Es crucial que marques la opción "Compartir audio de la pestaña" o "Compartir audio del sistema"</span> para que la grabación funcione.
+            </p>
           </div>
-          <div className="h-12">
-            {audioURL && status === 'stopped' && !isProcessing && (
-              <button
-                onClick={handleDownload}
-                disabled={!audioURL}
-                className="
-                  w-full h-12 px-6 bg-green-600 text-white rounded-md flex items-center justify-center
-                  font-semibold transition-colors duration-300 ease-in-out
-                  hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-500
-                "
-                style={{ animation: 'fadeIn 0.5s ease-in-out' }}
-              >
-                <DownloadIcon className="w-5 h-5 mr-2" />
-                Descargar Grabación
-              </button>
+          
+          <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+              <h3 className="text-md font-semibold text-gray-200 mb-3 text-center">Formato de Audio</h3>
+              <fieldset className="grid grid-cols-3 gap-2" disabled={status === 'recording'}>
+                  <legend className="sr-only">Elige un formato de audio</legend>
+                  <div>
+                      <input type="radio" id="format-webm" name="format" value="webm" checked={format === 'webm'} onChange={() => setFormat('webm')} className="peer hidden" />
+                      <label htmlFor="format-webm" className="block cursor-pointer rounded-md border border-gray-600 py-2 px-3 text-center text-sm transition-colors duration-200 peer-checked:bg-cyan-500 peer-checked:border-cyan-500 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed hover:border-gray-500 peer-checked:hover:bg-cyan-600">
+                          WebM <span className="block text-xs text-gray-400">Reducido</span>
+                      </label>
+                  </div>
+                  <div>
+                      <input type="radio" id="format-wav" name="format" value="wav" checked={format === 'wav'} onChange={() => setFormat('wav')} className="peer hidden" />
+                      <label htmlFor="format-wav" className="block cursor-pointer rounded-md border border-gray-600 py-2 px-3 text-center text-sm transition-colors duration-200 peer-checked:bg-cyan-500 peer-checked:border-cyan-500 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed hover:border-gray-500 peer-checked:hover:bg-cyan-600">
+                          WAV <span className="block text-xs text-gray-400">Calidad Alta</span>
+                      </label>
+                  </div>
+                  <div>
+                      <input type="radio" id="format-mp3" name="format" value="mp3" checked={format === 'mp3'} onChange={() => setFormat('mp3')} className="peer hidden" disabled={!isWavSupported}/>
+                      <label htmlFor="format-mp3" title={!isWavSupported ? "Tu navegador no soporta la grabación en WAV, necesaria para crear MP3." : ""} className="block cursor-pointer rounded-md border border-gray-600 py-2 px-3 text-center text-sm transition-colors duration-200 peer-checked:bg-cyan-500 peer-checked:border-cyan-500 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed hover:border-gray-500 peer-checked:hover:bg-cyan-600">
+                          MP3 <span className="block text-xs text-gray-400">Compatible</span>
+                      </label>
+                  </div>
+              </fieldset>
+          </div>
+
+          <div className="flex flex-col justify-center items-center h-40">
+             {status === 'recording' && (
+              <canvas ref={canvasRef} className="w-full h-20 mb-4 rounded-md" style={{ animation: 'fadeIn 0.5s ease-in-out' }} />
             )}
+            <button
+              onClick={status === 'recording' ? handleStopRecording : handleStartRecording}
+              className={`
+                flex items-center justify-center text-white
+                transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4
+                ${status === 'recording' ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500/50 w-24 h-24' : 'bg-cyan-500 hover:bg-cyan-600 focus:ring-cyan-500/50 w-32 h-32'}
+                rounded-full shadow-lg
+              `}
+              aria-label={status === 'recording' ? 'Detener grabación' : 'Iniciar grabación'}
+            >
+              {status === 'recording' ? <StopIcon className="w-10 h-10" /> : <MicrophoneIcon className="w-12 h-12" />}
+            </button>
+          </div>
+
+          {error && (
+            <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-md text-center">
+              {error}
+            </div>
+          )}
+          
+          {isProcessing && (
+              <div className="flex flex-col items-center justify-center text-center bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+                 <svg className="animate-spin h-8 w-8 text-cyan-400 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                 </svg>
+                 <p className="text-lg font-semibold text-cyan-400">Procesando MP3...</p>
+                 <p className="text-sm text-gray-400">Esto puede tardar unos segundos.</p>
+              </div>
+          )}
+
+          <div className="space-y-4">
+            <div className="h-16">
+              {audioURL && status === 'stopped' && !isProcessing && (
+                <div className="flex flex-col items-center space-y-4" style={{ animation: 'fadeIn 0.5s ease-in-out' }}>
+                  <audio controls src={audioURL} className="w-full rounded-md">
+                    Tu navegador no soporta el elemento de audio.
+                  </audio>
+                </div>
+              )}
+            </div>
+            <div className="h-12">
+              {audioURL && status === 'stopped' && !isProcessing && (
+                <button
+                  onClick={handleDownload}
+                  disabled={!audioURL}
+                  className="
+                    w-full h-12 px-6 bg-green-600 text-white rounded-md flex items-center justify-center
+                    font-semibold transition-colors duration-300 ease-in-out
+                    hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-500
+                  "
+                  style={{ animation: 'fadeIn 0.5s ease-in-out' }}
+                >
+                  <DownloadIcon className="w-5 h-5 mr-2" />
+                  Descargar Grabación
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-       <footer className="text-center mt-8 text-gray-500 text-sm">
-        <p>Creado con React, Tailwind CSS y la Web Audio API.</p>
+      </main>
+
+      {/* Footer Adaptado a Modo Oscuro */}
+      <footer className="border-t border-gray-800 bg-gray-950/40 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-center md:text-left text-gray-500 text-sm">
+            Aitor Sánchez Gutiérrez &copy; 2026 - Reservados todos los derechos
+          </p>
+          <div className="flex items-center gap-6 text-sm">
+            <a 
+              href="https://aitorsanchez.pages.dev/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-gray-500 hover:text-cyan-400 transition-colors font-medium"
+            >
+              Blog
+            </a>
+            <a 
+              href="https://aitorhub.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-gray-500 hover:text-cyan-400 transition-colors font-medium"
+            >
+              Más apps
+            </a>
+          </div>
+        </div>
       </footer>
     </div>
   );
